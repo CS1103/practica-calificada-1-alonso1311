@@ -59,11 +59,11 @@ ostream& operator << (ostream& ss, const Polynomial& n){
     Monomio* temp = n.p;
     while(temp != nullptr){
         if (temp->getExponente() == 0){
-            ss << temp->getCoeficiente() << endl;
+            ss << std::showpos << temp->getCoeficiente() << endl;
             temp = temp->getNext();
         }
         else {
-            ss << temp->getCoeficiente() << "x^" << temp->getExponente() << endl;
+            ss << std::showpos << temp->getCoeficiente() << "x^" << temp->getExponente() << endl;
             temp = temp->getNext();
         }
     }
@@ -73,8 +73,41 @@ ostream& operator << (ostream& ss, const Polynomial& n){
 Polynomial operator+(const Polynomial & poly, const int & numero) {
     Polynomial temp1;
     Monomio* temp = poly.p;
-    while(temp != nullptr && temp->getExponente() == 0){
-        temp1.add(temp->getCoeficiente() + numero, 0);
+    while(temp != nullptr){
+        if (temp->getExponente() == 0) {
+            temp1.add(temp->getCoeficiente() + numero, 0);
+            temp->getNext();
+        }
+        temp1.add(temp->getCoeficiente() + numero, temp->getExponente());
+        temp->getNext();
+    }
+    return temp1;
+}
+
+Polynomial operator+=(const Polynomial & poly, const int & numero) {
+    Polynomial temp1;
+    Monomio* temp = poly.p;
+    while(temp != nullptr){
+        if (temp->getExponente() == 0) {
+            temp1.add(temp->getCoeficiente() + numero, 0);
+            temp->getNext();
+        }
+        temp1.add(temp->getCoeficiente() + numero, temp->getExponente());
+        temp->getNext();
+    }
+    return temp1;
+}
+
+Polynomial operator+(const int & numero, const Polynomial & poly) {
+    Polynomial temp1;
+    Monomio* temp = poly.p;
+    while(temp != nullptr){
+        if (temp->getExponente() == 0) {
+            temp1.add(temp->getCoeficiente() + numero, 0);
+            temp->getNext();
+        }
+        temp1.add(temp->getCoeficiente() + numero, temp->getExponente());
+        temp->getNext();
     }
     return temp1;
 }
@@ -96,8 +129,74 @@ Polynomial operator+(const Polynomial & P1, const Polynomial & P2) {
     Monomio* temp1 = P1.p;
     Monomio* temp2 = P2.p;
     while(temp1 != nullptr && temp2 != nullptr){
-        temp1.add(temp->getCoeficiente() + numero, 0);
+        if (temp1->getExponente() == temp2->getExponente()){
+            P3.add(temp1->getCoeficiente() + temp2->getCoeficiente(), temp1->getExponente());
+            temp1->getNext();
+            temp2->getNext();
+        }
+        else {
+            P3.add(temp1->getCoeficiente(), temp1->getExponente());
+            P3.add(temp2->getCoeficiente(), temp2->getExponente());
+        }
     }
+    return P3;
+}
 
+Polynomial operator+=(const Polynomial & P1, const Polynomial & P2) {
+    Polynomial P3;
+
+    Monomio* temp1 = P1.p;
+    Monomio* temp2 = P2.p;
+    while(temp1 != nullptr && temp2 != nullptr){
+        if (temp1->getExponente() == temp2->getExponente()){
+            P3.add(temp1->getCoeficiente() + temp2->getCoeficiente(), temp1->getExponente());
+            temp1->getNext();
+            temp2->getNext();
+        }
+        else {
+            P3.add(temp1->getCoeficiente(), temp1->getExponente());
+            P3.add(temp2->getCoeficiente(), temp2->getExponente());
+        }
+    }
+    return P3;
+}
+
+Polynomial operator*(const Polynomial & P1, const Polynomial & P2) {
+    Polynomial P3;
+
+    Monomio* temp1 = P1.p;
+    Monomio* temp2 = P2.p;
+    while(temp1 != nullptr){
+        while(temp2 != nullptr){
+            P3.add(temp1->getCoeficiente()*temp2->getCoeficiente(), temp1->getExponente()+temp2->getExponente());
+            temp2->getNext();
+        }
+        temp1->getNext();
+    }
+    return P3;
+}
+
+Polynomial operator*(const Polynomial & poly, const int & numero) {
+    Polynomial temp1;
+    Monomio* temp = poly.p;
+    while(temp != nullptr){
+        temp1.add(temp->getCoeficiente() * numero, temp->getExponente());
+        temp->getNext();
+    }
+    return temp1;
+}
+
+Polynomial operator*(const int & numero, const Polynomial & poly) {
+    Polynomial temp1;
+    Monomio* temp = poly.p;
+    while(temp != nullptr){
+        temp1.add(temp->getCoeficiente() * numero, temp->getExponente());
+        temp->getNext();
+    }
+    return temp1;
+}
+
+Polynomial::~Polynomial() {
+    delete p;
 }
 

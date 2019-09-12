@@ -48,10 +48,19 @@ public:
     friend ostream& operator << (ostream& ss, const Polynomial& n);
 
     friend Polynomial operator +(const Polynomial &, const int &);
+    friend Polynomial operator +=(const Polynomial &, const int &);
+    friend Polynomial operator +(const int &, const Polynomial &);
 
     int degree();
 
     friend Polynomial operator +(const Polynomial &, const Polynomial &);
+    friend Polynomial operator +=(const Polynomial &, const Polynomial &);
+
+    friend Polynomial operator *(const Polynomial &, const Polynomial &);
+    friend Polynomial operator *(const Polynomial &, const int &);
+    friend Polynomial operator *(const int &, const Polynomial &);
+
+    virtual ~Polynomial();
 };
 
 #endif //POLINOMIO_POLINOMIO_H
